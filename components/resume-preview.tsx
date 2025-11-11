@@ -14,367 +14,265 @@ export default function ResumePreview({ data, onEdit }: { data: any; onEdit: () 
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>${personalInfo.fullName} — Resume</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    /* Reset + base */
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%;background:#f7f8fb;font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; color:#111827}
+    a{color:inherit}
+    /* Page size for printing */
+    @page { size: A4; margin: 0; }
+    body { -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
+
+    .paper {
+      width:210mm;
+      min-height:297mm;
+      margin:18px auto;
+      background:#ffffff;
+      border-radius:8px;
+      box-shadow:0 8px 30px rgba(8,30,63,0.08);
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
     }
-    
-    html, body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      color: #111827;
-      background: white;
-      height: 100%;
-    }
-    
-    @page {
-      size: A4;
-      margin: 0;
-    }
-    
-    .resume {
-      width: 210mm;
-      height: 297mm;
-      background: white;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-    
+
+    /* Header */
     .header {
-      display: flex;
-      gap: 28px;
-      padding: 24px 28px;
-      align-items: flex-start;
-      border-bottom: 1px solid #e5e7eb;
-      flex-shrink: 0;
+      display:flex;
+      gap:20px;
+      padding:28px 32px;
+      align-items:flex-start;
+      background:linear-gradient(90deg, #ffffff 0%, #fbfdff 100%);
+      border-bottom:1px solid #eef2f6;
+      position:relative;
     }
-    
-    .header-content {
-      flex: 1;
-    }
-    
+    .header-left { flex:1; min-width:0; }
     .name {
-      font-size: 24px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      margin-bottom: 4px;
-      color: #000;
+      font-size:26px;
+      font-weight:700;
+      color:#0b1724;
+      letter-spacing:0.4px;
+      margin-bottom:4px;
     }
-    
-    .education-line {
-      color: #666;
-      font-size: 12px;
-      margin-bottom: 8px;
+    .role {
+      color:#6b7280;
+      font-size:13px;
+      margin-bottom:10px;
     }
-    
-    .contact-info {
-      font-size: 11px;
-      color: #666;
-      line-height: 1.5;
+    .contact {
+      font-size:12px;
+      color:#475569;
+      line-height:1.6;
     }
-    
-    .contact-info a {
-      color: #0b6cf0;
-      text-decoration: none;
-    }
-    
+    .contact a { color:#0b6cf0; text-decoration:none; }
+
+    /* Photo card */
     .photo {
-      width: 100px;
-      height: 100px;
-      border-radius: 8px;
-      background: #e5e7eb;
-      background-size: cover;
-      background-position: center;
-      border: 2px solid #d1d5db;
-      flex-shrink: 0;
+      width:110px;
+      height:110px;
+      border-radius:10px;
+      background:#e6eefc;
+      border:2px solid #dbeafe;
+      background-size:cover;
+      background-position:center;
+      flex-shrink:0;
+      box-shadow:0 6px 18px rgba(11,108,240,0.06);
     }
-    
-    .content {
+
+    /* Content area split */
+    .body {
+      display:flex;
+      gap:28px;
+      padding:26px 32px;
+      flex:1;
+      align-items:flex-start;
+    }
+    .main {
+      flex: 2.1;
+      min-width:0;
+    }
+    .side {
       flex: 1;
-      padding: 20px 28px;
-      overflow-y: auto;
+      min-width:220px;
+      border-left:1px dashed #eef2f6;
+      padding-left:20px;
     }
-    
-    section {
-      margin-bottom: 18px;
-    }
-    
+
+    /* Section headings */
     h2 {
-      font-size: 11px;
-      font-weight: 800;
-      margin: 0 0 12px 0;
-      color: #0b6cf0;
-      text-transform: uppercase;
-      letter-spacing: 1px;
+      font-size:12px;
+      font-weight:800;
+      color:#0b6cf0;
+      text-transform:uppercase;
+      letter-spacing:1px;
+      margin-bottom:10px;
     }
-    
-    .job {
-      margin-bottom: 14px;
+
+    .section {
+      margin-bottom:18px;
     }
-    
-    .job-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      gap: 12px;
-      margin-bottom: 2px;
+
+    /* Job / Projects / Leadership */
+    .item {
+      margin-bottom:12px;
+      padding-bottom:8px;
+      border-bottom:1px solid rgba(14,20,30,0.03);
     }
-    
-    .job-title {
-      font-size: 14px;
-      font-weight: 600;
-      color: #000;
+    .item:last-child { border-bottom: none; padding-bottom:0; margin-bottom:0; }
+
+    .item-header {
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:flex-start;
+      margin-bottom:6px;
     }
-    
-    .job-duration {
-      font-size: 11px;
-      color: #666;
-      white-space: nowrap;
-      text-align: right;
+    .item-title {
+      font-size:15px;
+      font-weight:600;
+      color:#0b1724;
     }
-    
-    .job-meta {
-      font-size: 11px;
-      color: #666;
-      margin-bottom: 4px;
+    .item-meta {
+      font-size:11px;
+      color:#6b7280;
+      white-space:nowrap;
     }
-    
-    .job-description {
-      font-size: 11px;
-      color: #666;
-      margin-bottom: 6px;
-      line-height: 1.4;
+    .item-sub {
+      font-size:12px;
+      color:#475569;
+      margin-bottom:6px;
     }
-    
-    ul {
-      margin: 6px 0 0 18px;
-      font-size: 11px;
-      line-height: 1.5;
-      color: #333;
+    ul { margin-left:18px; color:#374151; font-size:12px; line-height:1.5; }
+    li { margin-bottom:6px; }
+
+    /* Education & Co-curricular (sidebar) */
+    .edu-block { margin-bottom:14px; }
+    .edu-school { font-weight:700; color:#0b1724; font-size:13px; margin-bottom:4px; }
+    .edu-detail { font-size:12px; color:#6b7280; }
+
+    .co { margin-bottom:10px; }
+    .co .name { font-weight:600; font-size:12px; color:#0b1724; margin-bottom:3px; }
+    .co .desc { font-size:12px; color:#6b7280; }
+
+    /* subtle divider */
+    .divider { height:1px; background:linear-gradient(90deg, transparent, rgba(14,20,30,0.03), transparent); margin:14px 0; }
+
+    /* Responsive small screens (preview only) */
+    @media (max-width:900px) {
+      .paper { width:100%; margin:12px; border-radius:6px; }
+      .body { flex-direction:column; padding:18px; }
+      .side { border-left:none; padding-left:0; border-top:1px dashed #eef2f6; padding-top:14px; margin-top:14px; }
+      .photo { margin-left:auto; }
+      .header { padding:20px; }
     }
-    
-    li {
-      margin-bottom: 4px;
-    }
-    
-    .project {
-      margin-bottom: 14px;
-    }
-    
-    .project-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      gap: 12px;
-      margin-bottom: 2px;
-    }
-    
-    .project-name {
-      font-weight: 600;
-      font-size: 13px;
-      color: #000;
-    }
-    
-    .project-duration {
-      font-size: 11px;
-      color: #666;
-      white-space: nowrap;
-      text-align: right;
-    }
-    
-    .project-meta {
-      font-size: 11px;
-      color: #666;
-      margin-bottom: 4px;
-    }
-    
-    .project-objective {
-      font-size: 11px;
-      color: #666;
-      margin-bottom: 6px;
-      line-height: 1.4;
-    }
-    
-    .leadership-item {
-      margin-bottom: 14px;
-    }
-    
-    .leadership-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      gap: 12px;
-      margin-bottom: 2px;
-    }
-    
-    .leadership-title {
-      font-weight: 600;
-      font-size: 13px;
-      color: #000;
-    }
-    
-    .leadership-duration {
-      font-size: 11px;
-      color: #666;
-      white-space: nowrap;
-      text-align: right;
-    }
-    
-    .muted {
-      color: #666;
-      font-size: 11px;
-      line-height: 1.4;
-    }
-    
-    .edu-item {
-      margin-bottom: 10px;
-    }
-    
-    .edu-school {
-      font-weight: 600;
-      font-size: 12px;
-      color: #000;
-      margin-bottom: 2px;
-    }
-    
-    .edu-details {
-      font-size: 11px;
-      color: #666;
-    }
-    
-    .co-activity {
-      margin-bottom: 10px;
-    }
-    
-    .co-activity-name {
-      font-weight: 600;
-      font-size: 12px;
-      color: #000;
-      margin-bottom: 2px;
-    }
-    
-    .co-activity-details {
-      font-size: 11px;
-      color: #666;
-    }
-    
+
+    /* Print adjustments */
     @media print {
-      body, html {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        height: 100%;
-      }
-      .resume {
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        padding: 0;
-        box-shadow: none;
-      }
-      @page {
-        margin: 0;
-      }
+      body, html { background: white; }
+      .paper { box-shadow:none; border-radius:0; margin:0; }
+      .side { border-left:1px dashed #eee; }
     }
   </style>
 </head>
 <body>
-  <article class="resume">
+  <article class="paper" role="article" aria-label="Resume of ${personalInfo.fullName}">
     <header class="header">
-      <div class="header-content">
+      <div class="header-left">
         <div class="name">${personalInfo.fullName.toUpperCase()}</div>
-        <div class="education-line">${personalInfo.education}</div>
-        <div class="contact-info">
-          <a href="mailto:${personalInfo.email}">${personalInfo.email}</a> | <a href="${personalInfo.linkedinUrl}" target="_blank">LinkedIn Profile</a><br>
+        <div class="role">${personalInfo.education}</div>
+        <div class="contact">
+          <a href="mailto:${personalInfo.email}">${personalInfo.email}</a> | <a href="${personalInfo.linkedinUrl}" target="_blank">LinkedIn</a><br>
           ${personalInfo.phone}
         </div>
       </div>
-      <div class="photo" style="background-image:url('${personalInfo.photo}')"></div>
+
+      <div class="photo" style="background-image:url('${personalInfo.photo || "data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%23e6eefc%22/><text x=%2250%25%22 y=%2252%25%22 font-size=%2216%22 font-family=%22Arial%22 fill=%22%230b1724%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22>Photo</text></svg>"}')"></div>
     </header>
-    
-    <div class="content">
-      <section>
-        <h2>Internships & Work Experience</h2>
-        ${data.workExperience
-          .map(
-            (exp: any) => `
-          <div class="job">
-            <div class="job-header">
-              <div class="job-title">${exp.role} — ${exp.company}</div>
-              <div class="job-duration">${exp.startDate} — ${exp.endDate}</div>
+
+    <div class="body">
+      <main class="main">
+        <section class="section">
+          <h2>Internships & Work Experience</h2>
+          ${data.workExperience
+            .map(
+              (exp: any) => `
+            <div class="item">
+              <div class="item-header">
+                <div class="item-title">${exp.role} — ${exp.company}</div>
+                <div class="item-meta">${exp.startDate} — ${exp.endDate}</div>
+              </div>
+              ${exp.title ? `<div class="item-sub">${exp.title}</div>` : ""}
+              <ul>
+                ${exp.highlights.map((h: string) => `<li>${h}</li>`).join("")}
+              </ul>
             </div>
-            <ul>
-              ${exp.highlights.map((h: string) => `<li>${h}</li>`).join("")}
-            </ul>
-          </div>
-        `,
-          )
-          .join("")}
-      </section>
+          `,
+            )
+            .join("")}
+        </section>
 
-      <section>
-        <h2>Projects</h2>
-        ${data.projects
-          .map(
-            (p: any) => `
-          <div class="project">
-            <div class="project-header">
-              <div class="project-name">${p.name}</div>
-              <div class="project-duration">${p.duration}</div>
+        <section class="section">
+          <h2>Projects</h2>
+          ${data.projects
+            .map(
+              (p: any) => `
+            <div class="item">
+              <div class="item-header">
+                <div class="item-title">${p.name}</div>
+                <div class="item-meta">${p.duration}</div>
+              </div>
+              ${p.objective ? `<div class="item-sub">${p.objective}</div>` : ""}
+              <ul>
+                ${p.highlights.map((h: string) => `<li>${h}</li>`).join("")}
+              </ul>
             </div>
-            <div class="project-meta">${p.objective}</div>
-            <ul>
-              ${p.highlights.map((h: string) => `<li>${h}</li>`).join("")}
-            </ul>
-          </div>
-        `,
-          )
-          .join("")}
-      </section>
+          `,
+            )
+            .join("")}
+        </section>
 
-      <section>
-        <h2>Leadership</h2>
-        ${data.leadership
-          .map(
-            (l: any) => `
-          <div class="leadership-item">
-            <div class="leadership-header">
-              <div class="leadership-title">${l.position} — ${l.organization}</div>
-              <div class="leadership-duration">${l.duration}</div>
+        <section class="section">
+          <h2>Leadership</h2>
+          ${data.leadership
+            .map(
+              (l: any) => `
+            <div class="item">
+              <div class="item-header">
+                <div class="item-title">${l.position} — ${l.organization}</div>
+                <div class="item-meta">${l.duration}</div>
+              </div>
+              <div class="item-sub">${l.description}</div>
             </div>
-            <div class="muted">${l.description}</div>
-          </div>
-        `,
-          )
-          .join("")}
-      </section>
+          `,
+            )
+            .join("")}
+        </section>
+      </main>
 
-      <section>
-        <h2>Education</h2>
-        <div class="edu-item">
-          <div class="edu-school">${edu.university}</div>
-          <div class="edu-details">${edu.degree} — ${edu.startYear} — ${edu.endYear}</div>
-        </div>
-        <div class="edu-item">
-          <div class="edu-school">${edu.highSchool}</div>
-          <div class="edu-details">Class 12 (${edu.class12Marks}) — Class 10 (${edu.class10Marks})</div>
-        </div>
-      </section>
-
-      <section>
-        <h2>Co-curricular</h2>
-        ${data.coActivities
-          .map(
-            (a: any) => `
-          <div class="co-activity">
-            <div class="co-activity-name">${a.name}</div>
-            <div class="co-activity-details">${a.level} • ${a.achievement}</div>
+      <aside class="side" aria-label="Sidebar: Education and activities">
+        <section class="section">
+          <h2>Education</h2>
+          <div class="edu-block">
+            <div class="edu-school">${edu.university}</div>
+            <div class="edu-detail">${edu.degree} — ${edu.startYear} — ${edu.endYear}</div>
+            <div class="divider"></div>
+            <div class="edu-school">${edu.highSchool}</div>
+            <div class="edu-detail">Class 12 (${edu.class12Marks}) — Class 10 (${edu.class10Marks})</div>
           </div>
-        `,
-          )
-          .join("")}
-      </section>
+        </section>
+
+        <section class="section">
+          <h2>Co-curricular</h2>
+          ${data.coActivities
+            .map(
+              (a: any) => `
+            <div class="co">
+              <div class="name">${a.name}</div>
+              <div class="desc">${a.level} • ${a.achievement}</div>
+            </div>
+          `,
+            )
+            .join("")}
+        </section>
+      </aside>
     </div>
   </article>
 </body>
@@ -386,49 +284,44 @@ export default function ResumePreview({ data, onEdit }: { data: any; onEdit: () 
     const blob = new Blob([htmlContent], { type: "text/html" })
     const url = URL.createObjectURL(blob)
 
-    const printWindow = window.open(url, "print", "height=800,width=1000")
+    const printWindow = window.open(url, "print", "height=900,width=1100")
     if (!printWindow) {
       alert("Please disable popup blocker and try again")
       return
     }
 
-    // Wait a moment for the window to load, then trigger print
+    // Give the new window a moment to load resources then trigger print
     setTimeout(() => {
       printWindow.focus()
       printWindow.print()
 
-      // Clean up the object URL after print
       setTimeout(() => {
         URL.revokeObjectURL(url)
       }, 1000)
-    }, 500)
+    }, 600)
   }
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-4xl mx-auto px-4">
+      <div className="max-w-5xl mx-auto px-4">
         <div className="flex justify-between items-center mb-8">
           <h2 className="text-3xl font-bold text-gray-900">Resume Preview</h2>
-          <div className="space-x-4 flex">
+          <div className="space-x-3 flex">
             <Button onClick={onEdit} variant="outline" className="px-6 bg-transparent">
               Edit Resume
             </Button>
             <Button onClick={downloadResume} className="bg-blue-600 hover:bg-blue-700 px-6">
-              Download as PDF
+              Download / Print
             </Button>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200">
-          <div
-            id="resume-content"
-            dangerouslySetInnerHTML={{ __html: generateHTML() }}
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              background: "#fafafa",
-              padding: "16px",
-            }}
+        <div className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 p-6">
+          {/* Place the HTML inside an inline frame for a faithful preview and isolation */}
+          <iframe
+            title="Resume Preview Frame"
+            srcDoc={generateHTML()}
+            style={{ width: "100%", height: "820px", border: "1px solid #e6edf6", borderRadius: 8 }}
           />
         </div>
       </div>
