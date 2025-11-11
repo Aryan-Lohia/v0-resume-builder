@@ -3,11 +3,20 @@
 import { Button } from "@/components/ui/button"
 
 export default function ResumePreview({ data, onEdit }: { data: any; onEdit: () => void }) {
-  const generateHTML = () => {
-    const edu = data.education
-    const personalInfo = data.personalInfo
+const generateHTML = () => {
+  const edu = data.education
+  const personalInfo = data.personalInfo
 
-    return `<!doctype html>
+  // safe inline SVG fallback for photo (keeps it printable)
+  const svgFallback =
+    'data:image/svg+xml;utf8,' +
+    encodeURIComponent(
+      `<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300"><rect width="100%" height="100%" fill="#e6eefc"/><text x="50%" y="52%" font-size="34" font-family="Arial" fill="#0b1724" dominant-baseline="middle" text-anchor="middle">Photo</text></svg>`,
+    )
+
+  const photoSrc = personalInfo.photo ? personalInfo.photo : svgFallback
+
+  return `<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -18,14 +27,17 @@ export default function ResumePreview({ data, onEdit }: { data: any; onEdit: () 
     *{box-sizing:border-box;margin:0;padding:0}
     html,body{height:100%;background:#f7f8fb;font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; color:#111827}
     a{color:inherit}
-    /* Page size for printing */
-    @page { size: A4; margin: 0; }
-    body { -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
+    -webkit-print-color-adjust:exact;
+    print-color-adjust:exact;
+
+    /* Page size for printing: explicit A4 */
+    @page { size: A4; margin: 10mm; }
+    body { -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; padding:0; }
 
     .paper {
       width:210mm;
-      min-height:297mm;
-      margin:18px auto;
+      height:297mm;
+      margin:0 auto;
       background:#ffffff;
       border-radius:8px;
       box-shadow:0 8px 30px rgba(8,30,63,0.08);
@@ -38,7 +50,7 @@ export default function ResumePreview({ data, onEdit }: { data: any; onEdit: () 
     .header {
       display:flex;
       gap:20px;
-      padding:28px 32px;
+      padding:22px 28px;
       align-items:flex-start;
       background:linear-gradient(90deg, #ffffff 0%, #fbfdff 100%);
       border-bottom:1px solid #eef2f6;
@@ -64,36 +76,38 @@ export default function ResumePreview({ data, onEdit }: { data: any; onEdit: () 
     }
     .contact a { color:#0b6cf0; text-decoration:none; }
 
-    /* Photo card */
-    .photo {
+    /* Photo - use <img> so it prints reliably */
+    .photo-wrap { flex-shrink:0; }
+    .photo-img {
       width:110px;
       height:110px;
       border-radius:10px;
       background:#e6eefc;
       border:2px solid #dbeafe;
-      background-size:cover;
-      background-position:center;
-      flex-shrink:0;
+      object-fit:cover;
+      display:block;
       box-shadow:0 6px 18px rgba(11,108,240,0.06);
     }
 
     /* Content area split */
     .body {
       display:flex;
-      gap:28px;
-      padding:26px 32px;
+      gap:24px;
+      padding:20px 28px;
       flex:1;
       align-items:flex-start;
     }
     .main {
       flex: 2.1;
       min-width:0;
+      max-width: calc(100% - 220px); /* ensure main + side fit */
     }
     .side {
       flex: 1;
-      min-width:220px;
+      min-width:180px; /* reduced from 220 to avoid forced wrap */
+      max-width:220px;
       border-left:1px dashed #eef2f6;
-      padding-left:20px;
+      padding-left:16px;
     }
 
     /* Section headings */
@@ -106,15 +120,15 @@ export default function ResumePreview({ data, onEdit }: { data: any; onEdit: () 
       margin-bottom:10px;
     }
 
-    .section {
-      margin-bottom:18px;
-    }
+    .section { margin-bottom:14px; }
 
     /* Job / Projects / Leadership */
     .item {
-      margin-bottom:12px;
-      padding-bottom:8px;
+      margin-bottom:10px;
+      padding-bottom:6px;
       border-bottom:1px solid rgba(14,20,30,0.03);
+      break-inside:avoid;
+      page-break-inside:avoid;
     }
     .item:last-child { border-bottom: none; padding-bottom:0; margin-bottom:0; }
 
@@ -140,35 +154,46 @@ export default function ResumePreview({ data, onEdit }: { data: any; onEdit: () 
       color:#475569;
       margin-bottom:6px;
     }
-    ul { margin-left:18px; color:#374151; font-size:12px; line-height:1.5; }
+    ul { margin-left:18px; color:#374151; font-size:12px; line-height:1.45; }
     li { margin-bottom:6px; }
 
     /* Education & Co-curricular (sidebar) */
-    .edu-block { margin-bottom:14px; }
+    .edu-block { margin-bottom:10px; }
     .edu-school { font-weight:700; color:#0b1724; font-size:13px; margin-bottom:4px; }
     .edu-detail { font-size:12px; color:#6b7280; }
 
-    .co { margin-bottom:10px; }
+    .co { margin-bottom:8px; }
     .co .name { font-weight:600; font-size:12px; color:#0b1724; margin-bottom:3px; }
     .co .desc { font-size:12px; color:#6b7280; }
 
-    /* subtle divider */
-    .divider { height:1px; background:linear-gradient(90deg, transparent, rgba(14,20,30,0.03), transparent); margin:14px 0; }
+    .divider { height:1px; background:linear-gradient(90deg, transparent, rgba(14,20,30,0.03), transparent); margin:12px 0; }
+
+    /* Keep sections from breaking awkwardly across pages */
+    .paper, .header, .body, .main, .side, .section, .item {
+      -webkit-print-color-adjust: exact;
+      color-adjust: exact;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
 
     /* Responsive small screens (preview only) */
     @media (max-width:900px) {
-      .paper { width:100%; margin:12px; border-radius:6px; }
-      .body { flex-direction:column; padding:18px; }
-      .side { border-left:none; padding-left:0; border-top:1px dashed #eef2f6; padding-top:14px; margin-top:14px; }
-      .photo { margin-left:auto; }
+      .paper { width:100%; margin:12px; border-radius:6px; height:auto }
+      .body { flex-direction:column; padding:14px; }
+      .side { border-left:none; padding-left:0; border-top:1px dashed #eef2f6; padding-top:14px; margin-top:14px; min-width:0; max-width:100% }
+      .photo-img { margin-left:auto; }
       .header { padding:20px; }
     }
 
-    /* Print adjustments */
+    /* Print adjustments: force the same single-page A4 look and ensure background/colors print */
     @media print {
-      body, html { background: white; }
-      .paper { box-shadow:none; border-radius:0; margin:0; }
-      .side { border-left:1px dashed #eee; }
+      html,body { background: white; margin:0; padding:0; height:297mm; }
+      .paper { box-shadow:none; border-radius:0; margin:0; width:210mm; height:297mm; overflow:visible; }
+      .header { padding:18px 22px; }
+      .body { padding:16px 22px; gap:18px; }
+      .photo-img { display:block; }
+      /* small scale fallback if something is marginally overflowing */
+      .paper.fit-scale { transform-origin: top left; transform: scale(0.98); }
     }
   </style>
 </head>
@@ -184,7 +209,9 @@ export default function ResumePreview({ data, onEdit }: { data: any; onEdit: () 
         </div>
       </div>
 
-      <div class="photo" style="background-image:url('${personalInfo.photo || "data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%23e6eefc%22/><text x=%2250%25%22 y=%2252%25%22 font-size=%2216%22 font-family=%22Arial%22 fill=%22%230b1724%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22>Photo</text></svg>"}')"></div>
+      <div class="photo-wrap">
+        <img src="${photoSrc}" alt="Photo of ${personalInfo.fullName}" class="photo-img" />
+      </div>
     </header>
 
     <div class="body">
@@ -275,31 +302,98 @@ export default function ResumePreview({ data, onEdit }: { data: any; onEdit: () 
       </aside>
     </div>
   </article>
+
+  <script>
+    // If content is slightly overfull, mark paper for tiny scale at print time.
+    // This runs in the iframe when printed.
+    (function(){
+      try {
+        const paper = document.querySelector('.paper');
+        if (!paper) return;
+        // Allow tiny room: if content scroll height > container height, scale down slightly
+        const overflow = paper.scrollHeight > paper.clientHeight;
+        if (overflow) paper.classList.add('fit-scale');
+        // Ensure images are loaded before print
+        const imgs = Array.from(document.images || []);
+        if (imgs.length) {
+          let loaded = 0;
+          imgs.forEach(img => {
+            if (img.complete) loaded++;
+            else img.addEventListener('load', () => {
+              loaded++;
+              if (loaded === imgs.length) {}
+            });
+            img.addEventListener('error', () => { loaded++; });
+          });
+        }
+      } catch(e){}
+    })();
+  </script>
 </body>
 </html>`
-  }
+}
 
-  const downloadResume = () => {
-    const htmlContent = generateHTML()
-    const blob = new Blob([htmlContent], { type: "text/html" })
-    const url = URL.createObjectURL(blob)
+const downloadResume = () => {
+  const htmlContent = generateHTML()
+  const blob = new Blob([htmlContent], { type: "text/html" })
+  const url = URL.createObjectURL(blob)
 
-    const printWindow = window.open(url, "print", "height=900,width=1100")
-    if (!printWindow) {
-      alert("Please disable popup blocker and try again")
-      return
+  // Create a hidden iframe so we can print from it without opening a visible popup
+  const iframe = document.createElement("iframe")
+  iframe.style.position = "fixed"
+  iframe.style.right = "0"
+  iframe.style.bottom = "0"
+  iframe.style.width = "0"
+  iframe.style.height = "0"
+  iframe.style.border = "0"
+  iframe.srcdoc = htmlContent
+
+  document.body.appendChild(iframe)
+
+  // Helper: fallback to download of the HTML file
+  const fallbackDownload = () => {
+    try {
+      const a = document.createElement("a")
+      a.href = url
+      const nameSafe = (data?.personalInfo?.fullName || "resume").replace(/\s+/g, "_")
+      a.download = `${nameSafe}_resume.html`
+      document.body.appendChild(a)
+      a.click()
+      a.remove()
+    } finally {
+      URL.revokeObjectURL(url)
     }
-
-    // Give the new window a moment to load resources then trigger print
-    setTimeout(() => {
-      printWindow.focus()
-      printWindow.print()
-
-      setTimeout(() => {
-        URL.revokeObjectURL(url)
-      }, 1000)
-    }, 600)
   }
+
+  // When iframe loads, attempt to print. If printing throws or is blocked, fallback to download.
+  iframe.onload = () => {
+    try {
+      // focus + print from the iframe's window (user gesture from button click should allow this in most browsers)
+      iframe.contentWindow?.focus()
+      // Some browsers will prompt print dialog, some may block; wrap in try/catch
+      iframe.contentWindow?.print()
+      // Remove iframe shortly after issuing print to keep DOM tidy
+      setTimeout(() => {
+        if (document.body.contains(iframe)) document.body.removeChild(iframe)
+        URL.revokeObjectURL(url)
+      }, 1200)
+    } catch (err) {
+      // If print fails, remove iframe and fallback to download
+      if (document.body.contains(iframe)) document.body.removeChild(iframe)
+      fallbackDownload()
+    }
+  }
+
+  // Safety net: if onload doesn't fire (rare), fallback to download after 2s
+  const safetyTimer = setTimeout(() => {
+    if (document.body.contains(iframe)) document.body.removeChild(iframe)
+    fallbackDownload()
+  }, 2000)
+
+  // Clear safety timer if iframe successfully loads
+  iframe.addEventListener("load", () => clearTimeout(safetyTimer))
+}
+
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
