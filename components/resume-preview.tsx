@@ -216,7 +216,7 @@ const generateHTML = () => {
         <div class="name">${personalInfo.fullName.toUpperCase()}</div>
         <div class="role">${personalInfo.education}</div>
         <div class="contact">
-          <a href="mailto:${personalInfo.email}">${personalInfo.email}</a> | <a href="${personalInfo.linkedinUrl}" target="_blank">${personalInfo.linkedinUrl}</a><br>
+          <a href="mailto:${personalInfo.email}">${personalInfo.email}</a> | <a href="${personalInfo.linkedinUrl}" target="_blank">Linkedin Profile</a><br>
           ${personalInfo.phone}
         </div>
       </div>
