@@ -31,7 +31,6 @@ const generateHTML = () => {
     print-color-adjust:exact;
 
     /* Page size for printing: explicit A4 */
-    @page { size: A4; margin: 10mm; }
     body { -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; padding:0; }
 
     .paper {
@@ -338,60 +337,28 @@ const downloadResume = () => {
   const blob = new Blob([htmlContent], { type: "text/html" })
   const url = URL.createObjectURL(blob)
 
-  // Create a hidden iframe so we can print from it without opening a visible popup
-  const iframe = document.createElement("iframe")
-  iframe.style.position = "fixed"
-  iframe.style.right = "0"
-  iframe.style.bottom = "0"
-  iframe.style.width = "0"
-  iframe.style.height = "0"
-  iframe.style.border = "0"
-  iframe.srcdoc = htmlContent
+  // Open in a new tab/window
+  const printWindow = window.open(url, "_blank", "width=1100,height=900")
 
-  document.body.appendChild(iframe)
-
-  // Helper: fallback to download of the HTML file
-  const fallbackDownload = () => {
-    try {
-      const a = document.createElement("a")
-      a.href = url
-      const nameSafe = (data?.personalInfo?.fullName || "resume").replace(/\s+/g, "_")
-      a.download = `${nameSafe}_resume.html`
-      document.body.appendChild(a)
-      a.click()
-      a.remove()
-    } finally {
-      URL.revokeObjectURL(url)
-    }
+  if (!printWindow) {
+    alert("Please allow popups to print your resume.")
+    return
   }
 
-  // When iframe loads, attempt to print. If printing throws or is blocked, fallback to download.
-  iframe.onload = () => {
+  // When the new window finishes loading, trigger print
+  printWindow.onload = () => {
     try {
-      // focus + print from the iframe's window (user gesture from button click should allow this in most browsers)
-      iframe.contentWindow?.focus()
-      // Some browsers will prompt print dialog, some may block; wrap in try/catch
-      iframe.contentWindow?.print()
-      // Remove iframe shortly after issuing print to keep DOM tidy
-      setTimeout(() => {
-        if (document.body.contains(iframe)) document.body.removeChild(iframe)
-        URL.revokeObjectURL(url)
-      }, 1200)
+      printWindow.focus()
+      printWindow.print()
     } catch (err) {
-      // If print fails, remove iframe and fallback to download
-      if (document.body.contains(iframe)) document.body.removeChild(iframe)
-      fallbackDownload()
+      console.error("Print failed:", err)
     }
   }
 
-  // Safety net: if onload doesn't fire (rare), fallback to download after 2s
-  const safetyTimer = setTimeout(() => {
-    if (document.body.contains(iframe)) document.body.removeChild(iframe)
-    fallbackDownload()
-  }, 2000)
-
-  // Clear safety timer if iframe successfully loads
-  iframe.addEventListener("load", () => clearTimeout(safetyTimer))
+  // Cleanup after print or if closed
+  const cleanup = () => URL.revokeObjectURL(url)
+  printWindow.addEventListener("afterprint", cleanup)
+  printWindow.addEventListener("beforeunload", cleanup)
 }
 
 
