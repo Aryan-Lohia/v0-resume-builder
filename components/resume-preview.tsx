@@ -331,34 +331,125 @@ const generateHTML = () => {
 </body>
 </html>`
 }
-
 const downloadResume = () => {
-  const htmlContent = generateHTML()
-  const blob = new Blob([htmlContent], { type: "text/html" })
-  const url = URL.createObjectURL(blob)
-
-  // Open in a new tab/window
-  const printWindow = window.open(url, "_blank", "width=1100,height=900")
+  const htmlContent = generateHTML() // must return a complete HTML document string (<!doctype html>...<body>...</body>)
+  // Open a new window/tab
+  const printWindow = window.open("", "_blank", "width=1100,height=900")
 
   if (!printWindow) {
-    alert("Please allow popups to print your resume.")
+    alert("Please allow popups for printing.")
     return
   }
 
-  // When the new window finishes loading, trigger print
-  printWindow.onload = () => {
+  // A robust print-ready wrapper: inject print-specific CSS to force A4 and prevent page breaks
+  const printCss = `
+    <style>
+      @page { size: A4; margin: 10mm; }
+      html, body {
+        width: 210mm; /* A4 width */
+        height: 297mm; /* A4 height */
+      }
+      body {
+        margin: 0;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        background: white;
+        box-sizing: border-box;
+        font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      }
+
+      /* Ensure content doesn't split across pages */
+      .resume-root, /* if your root container has a class */
+      body > * {
+        page-break-inside: avoid;
+        break-inside: avoid;
+        -webkit-region-break-inside: avoid;
+      }
+
+      /* Make layout deterministic: use mm or px mapped to mm-ish */
+      .page {
+        width: 210mm;
+        height: 297mm;
+        box-sizing: border-box;
+        overflow: hidden;
+      }
+
+      /* Images and photos: contain and fixed size so printing matches preview */
+      img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+      }
+
+      /* Hide any interactive UI meant only for screen */
+      .no-print { display:none !important; }
+
+      /* Force consistent line heights and avoid font swaps */
+      * { -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
+    </style>
+  `
+
+  // If generateHTML returns a full document, inject the printCss into its head.
+  // Otherwise wrap the body inside a full HTML document.
+  let finalHtml = htmlContent
+  if (!/<!doctype html>/i.test(htmlContent)) {
+    finalHtml = `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">${printCss}</head><body>${htmlContent}</body></html>`
+  } else {
+    // Insert printCss into <head> of returned HTML
+    finalHtml = htmlContent.replace(/<head([^>]*)>/i, `<head$1>${printCss}`)
+  }
+
+  // Write the HTML into the new window's document
+  printWindow.document.open()
+  printWindow.document.write(finalHtml)
+  printWindow.document.close()
+
+  // Helper: wait for fonts and images to load in the new window before printing
+  const waitForResources = () => {
+    const w = printWindow
+    return new Promise((resolve) => {
+      // Wait for window load event first
+      w.addEventListener("load", () => {
+        // Wait for document.fonts if available
+        const fontReady = (w.document.fonts && w.document.fonts.ready) ? w.document.fonts.ready : Promise.resolve()
+        // Gather image load promises
+        const imgs = Array.from(w.document.images || [])
+        const imgPromises = imgs.map(img => {
+          return new Promise((res) => {
+            if (img.complete) return res()
+            img.addEventListener("load", res)
+            img.addEventListener("error", res) // resolve anyway on error
+          })
+        })
+        Promise.all([fontReady, ...imgPromises]).then(() => {
+          // give the browser a quick beat to apply layout (100ms)
+          setTimeout(resolve, 100)
+        })
+      }, { once: true })
+
+      // As a fallback in case load never fires, timeout after 2s
+      setTimeout(resolve, 2000)
+    })
+  }
+
+  waitForResources().then(() => {
     try {
+      // Focus and print. Bind cleanup to afterprint/beforeunload.
       printWindow.focus()
+      // Use printWindow.print() which opens dialog matching the layout
       printWindow.print()
     } catch (err) {
       console.error("Print failed:", err)
+    } finally {
+      // cleanup object URLs if you created any
+      // Optionally close the window after a short delay:
+      const closeAfter = 900 // ms; set to null to keep window open
+      if (closeAfter) {
+        const cleanup = () => { try { printWindow.close() } catch(e){} }
+        setTimeout(cleanup, closeAfter)
+      }
     }
-  }
-
-  // Cleanup after print or if closed
-  const cleanup = () => URL.revokeObjectURL(url)
-  printWindow.addEventListener("afterprint", cleanup)
-  printWindow.addEventListener("beforeunload", cleanup)
+  })
 }
 
 
