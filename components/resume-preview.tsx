@@ -7,11 +7,10 @@ const generateHTML = () => {
   const edu = data.education
   const personalInfo = data.personalInfo
 
-  // safe inline SVG fallback for photo (keeps it printable)
   const svgFallback =
     'data:image/svg+xml;utf8,' +
     encodeURIComponent(
-      `<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300"><rect width="100%" height="100%" fill="#e6eefc"/><text x="50%" y="52%" font-size="34" font-family="Arial" fill="#0b1724" dominant-baseline="middle" text-anchor="middle">Photo</text></svg>`,
+      `<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300"><rect width="100%" height="100%" fill="#e6eefc"/><text x="50%" y="52%" font-size="34" font-family="Times New Roman" fill="#0b1724" dominant-baseline="middle" text-anchor="middle">Photo</text></svg>`,
     )
 
   const photoSrc = personalInfo.photo ? personalInfo.photo : svgFallback
@@ -23,15 +22,22 @@ const generateHTML = () => {
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>${personalInfo.fullName} — Resume</title>
   <style>
-    /* Reset + base */
     *{box-sizing:border-box;margin:0;padding:0}
-    html,body{height:100%;background:#f7f8fb;font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; color:#111827}
+    html,body{
+      height:100%;
+      background:#f7f8fb;
+      font-family:"Times New Roman", Times, serif;
+      color:#111827;
+    }
     a{color:inherit}
     -webkit-print-color-adjust:exact;
     print-color-adjust:exact;
 
-    /* Page size for printing: explicit A4 */
-    body { -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; padding:0; }
+    body {
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      padding:0;
+    }
 
     .paper {
       width:210mm;
@@ -45,7 +51,6 @@ const generateHTML = () => {
       flex-direction:column;
     }
 
-    /* Header */
     .header {
       display:flex;
       gap:20px;
@@ -62,6 +67,7 @@ const generateHTML = () => {
       color:#0b1724;
       letter-spacing:0.4px;
       margin-bottom:4px;
+      font-family:"Times New Roman", Times, serif;
     }
     .role {
       color:#6b7280;
@@ -75,7 +81,6 @@ const generateHTML = () => {
     }
     .contact a { color:#0b6cf0; text-decoration:none; }
 
-    /* Photo - use <img> so it prints reliably */
     .photo-wrap { flex-shrink:0; }
     .photo-img {
       width:110px;
@@ -88,7 +93,6 @@ const generateHTML = () => {
       box-shadow:0 6px 18px rgba(11,108,240,0.06);
     }
 
-    /* Content area split */
     .body {
       display:flex;
       gap:24px;
@@ -99,17 +103,16 @@ const generateHTML = () => {
     .main {
       flex: 2.1;
       min-width:0;
-      max-width: calc(100% - 220px); /* ensure main + side fit */
+      max-width: calc(100% - 220px);
     }
     .side {
       flex: 1;
-      min-width:180px; /* reduced from 220 to avoid forced wrap */
+      min-width:180px;
       max-width:220px;
       border-left:1px dashed #eef2f6;
       padding-left:16px;
     }
 
-    /* Section headings */
     h2 {
       font-size:12px;
       font-weight:800;
@@ -119,9 +122,20 @@ const generateHTML = () => {
       margin-bottom:10px;
     }
 
-    .section { margin-bottom:14px; }
+    .section {
+      margin-bottom:14px;
+      position:relative;
+    }
 
-    /* Job / Projects / Leadership */
+    /* Divider between sections */
+    .section:not(:last-child)::after {
+      content:"";
+      display:block;
+      height:1px;
+      background:linear-gradient(90deg, transparent, rgba(14,20,30,0.06), transparent);
+      margin-top:14px;
+    }
+
     .item {
       margin-bottom:10px;
       padding-bottom:6px;
@@ -156,7 +170,6 @@ const generateHTML = () => {
     ul { margin-left:18px; color:#374151; font-size:12px; line-height:1.45; }
     li { margin-bottom:6px; }
 
-    /* Education & Co-curricular (sidebar) */
     .edu-block { margin-bottom:10px; }
     .edu-school { font-weight:700; color:#0b1724; font-size:13px; margin-bottom:4px; }
     .edu-detail { font-size:12px; color:#6b7280; }
@@ -165,9 +178,12 @@ const generateHTML = () => {
     .co .name { font-weight:600; font-size:12px; color:#0b1724; margin-bottom:3px; }
     .co .desc { font-size:12px; color:#6b7280; }
 
-    .divider { height:1px; background:linear-gradient(90deg, transparent, rgba(14,20,30,0.03), transparent); margin:12px 0; }
+    .divider {
+      height:1px;
+      background:linear-gradient(90deg, transparent, rgba(14,20,30,0.03), transparent);
+      margin:12px 0;
+    }
 
-    /* Keep sections from breaking awkwardly across pages */
     .paper, .header, .body, .main, .side, .section, .item {
       -webkit-print-color-adjust: exact;
       color-adjust: exact;
@@ -175,7 +191,6 @@ const generateHTML = () => {
       page-break-inside: avoid;
     }
 
-    /* Responsive small screens (preview only) */
     @media (max-width:900px) {
       .paper { width:100%; margin:12px; border-radius:6px; height:auto }
       .body { flex-direction:column; padding:14px; }
@@ -184,14 +199,12 @@ const generateHTML = () => {
       .header { padding:20px; }
     }
 
-    /* Print adjustments: force the same single-page A4 look and ensure background/colors print */
     @media print {
       html,body { background: white; margin:0; padding:0; height:297mm; }
       .paper { box-shadow:none; border-radius:0; margin:0; width:210mm; height:297mm; overflow:visible; }
       .header { padding:18px 22px; }
       .body { padding:16px 22px; gap:18px; }
       .photo-img { display:block; }
-      /* small scale fallback if something is marginally overflowing */
       .paper.fit-scale { transform-origin: top left; transform: scale(0.98); }
     }
   </style>
@@ -203,7 +216,7 @@ const generateHTML = () => {
         <div class="name">${personalInfo.fullName.toUpperCase()}</div>
         <div class="role">${personalInfo.education}</div>
         <div class="contact">
-          <a href="mailto:${personalInfo.email}">${personalInfo.email}</a> | <a href="${personalInfo.linkedinUrl}" target="_blank">LinkedIn</a><br>
+          <a href="mailto:${personalInfo.email}">${personalInfo.email}</a> | <a href="${personalInfo.linkedinUrl}" target="_blank">${personalInfo.linkedinUrl}</a><br>
           ${personalInfo.phone}
         </div>
       </div>
@@ -219,7 +232,7 @@ const generateHTML = () => {
           <h2>Internships & Work Experience</h2>
           ${data.workExperience
             .map(
-              (exp: any) => `
+              (exp) => `
             <div class="item">
               <div class="item-header">
                 <div class="item-title">${exp.role} — ${exp.company}</div>
@@ -227,7 +240,7 @@ const generateHTML = () => {
               </div>
               ${exp.title ? `<div class="item-sub">${exp.title}</div>` : ""}
               <ul>
-                ${exp.highlights.map((h: string) => `<li>${h}</li>`).join("")}
+                ${exp.highlights.map((h) => `<li>${h}</li>`).join("")}
               </ul>
             </div>
           `,
@@ -239,7 +252,7 @@ const generateHTML = () => {
           <h2>Projects</h2>
           ${data.projects
             .map(
-              (p: any) => `
+              (p) => `
             <div class="item">
               <div class="item-header">
                 <div class="item-title">${p.name}</div>
@@ -247,7 +260,7 @@ const generateHTML = () => {
               </div>
               ${p.objective ? `<div class="item-sub">${p.objective}</div>` : ""}
               <ul>
-                ${p.highlights.map((h: string) => `<li>${h}</li>`).join("")}
+                ${p.highlights.map((h) => `<li>${h}</li>`).join("")}
               </ul>
             </div>
           `,
@@ -259,7 +272,7 @@ const generateHTML = () => {
           <h2>Leadership</h2>
           ${data.leadership
             .map(
-              (l: any) => `
+              (l) => `
             <div class="item">
               <div class="item-header">
                 <div class="item-title">${l.position} — ${l.organization}</div>
@@ -289,7 +302,7 @@ const generateHTML = () => {
           <h2>Co-curricular</h2>
           ${data.coActivities
             .map(
-              (a: any) => `
+              (a) => `
             <div class="co">
               <div class="name">${a.name}</div>
               <div class="desc">${a.level} • ${a.achievement}</div>
@@ -303,34 +316,19 @@ const generateHTML = () => {
   </article>
 
   <script>
-    // If content is slightly overfull, mark paper for tiny scale at print time.
-    // This runs in the iframe when printed.
     (function(){
       try {
         const paper = document.querySelector('.paper');
         if (!paper) return;
-        // Allow tiny room: if content scroll height > container height, scale down slightly
         const overflow = paper.scrollHeight > paper.clientHeight;
         if (overflow) paper.classList.add('fit-scale');
-        // Ensure images are loaded before print
-        const imgs = Array.from(document.images || []);
-        if (imgs.length) {
-          let loaded = 0;
-          imgs.forEach(img => {
-            if (img.complete) loaded++;
-            else img.addEventListener('load', () => {
-              loaded++;
-              if (loaded === imgs.length) {}
-            });
-            img.addEventListener('error', () => { loaded++; });
-          });
-        }
       } catch(e){}
     })();
   </script>
 </body>
 </html>`
 }
+
 const downloadResume = () => {
   const htmlContent = generateHTML() // must return a complete HTML document string (<!doctype html>...<body>...</body>)
   // Open a new window/tab

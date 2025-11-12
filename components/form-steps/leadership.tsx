@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
+import { Trash2 } from "lucide-react"
 
 export default function LeadershipStep({ data, setData, errors }: any) {
   const updateLeadership = (index: number, field: string, value: any) => {
@@ -28,11 +29,29 @@ export default function LeadershipStep({ data, setData, errors }: any) {
     }))
   }
 
+  const removeLeadership = (index: number) => {
+    if (data.leadership.length > 1) {
+      const updated = data.leadership.filter((_: any, i: number) => i !== index)
+      setData((prev: any) => ({ ...prev, leadership: updated }))
+    }
+  }
+
   return (
     <div className="space-y-6">
       {data.leadership.map((lead: any, idx: number) => (
         <Card key={lead.id || idx} className="p-6 bg-gray-50">
-          <h3 className="font-semibold text-lg mb-4">Position {idx + 1}</h3>
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="font-semibold text-lg">Position {idx + 1}</h3>
+            <Button
+              onClick={() => removeLeadership(idx)}
+              variant="ghost"
+              size="sm"
+              disabled={data.leadership.length === 1}
+              className="text-red-500 hover:text-red-700 hover:bg-red-50"
+            >
+              <Trash2 className="w-4 h-4" />
+            </Button>
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>
