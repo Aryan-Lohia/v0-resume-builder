@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useEffect } from "react";
 
 export default function ResumePreview({
   data,
@@ -448,11 +447,6 @@ export default function ResumePreview({
 </body>
 </html>`;
   };
-
-  useEffect(() => {
-    const res = generateHTML();
-    console.log(res);
-  }, []);
 
   const downloadResume = () => {
     const htmlContent = generateHTML(); // must return a complete HTML document string (<!doctype html>...<body>...</body>)
