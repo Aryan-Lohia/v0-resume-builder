@@ -46,7 +46,7 @@ export default function Home() {
       <div className="max-w-full">
         {!showPreview ? (
           <>
-            <div className="sticky top-0 bg-white border-b border-gray-200 py-4 px-4 md:px-8 z-10 shadow-sm">
+            <div className="sticky top-0 bg-white border-b border-gray-200 p-4 md:px-8 z-10 shadow-sm">
               <div className="flex md:items-center gap-2 md:gap-4 flex-row-reverse md:flex-row justify-between">
                 <Image
                   src={nexisLogo}
