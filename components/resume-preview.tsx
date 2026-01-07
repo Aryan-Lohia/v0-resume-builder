@@ -268,7 +268,7 @@ export default function ResumePreview({
     }
 
     @media (max-width:900px) {
-      .paper { width:100%; margin:12px; border-radius:6px; height:auto }
+      .paper { width:100%; border-radius:6px; height:auto }
       .body { padding:14px; }
       .side { border-left:none; padding-left:0; border-top:1px dashed #eef2f6; padding-top:14px; margin-top:14px; min-width:0; max-width:100% }
       .photo-img { margin-left:auto; }
@@ -622,7 +622,8 @@ export default function ResumePreview({
             srcDoc={generateHTML()}
             style={{
               width: "100%",
-              height: "820px",
+              height: "calc(100dvh - 120px)",
+              maxHeight: "820px",
               border: "1px solid #e6edf6",
               borderRadius: 8,
             }}
