@@ -565,17 +565,18 @@ export default function ResumePreview({
       } catch (err) {
         console.error("Print failed:", err);
       } finally {
+        // This is causing the error when downloading - Do not set timeout, let user decide when to close.
         // cleanup object URLs if you created any
         // Optionally close the window after a short delay:
-        const closeAfter = 900; // ms; set to null to keep window open
-        if (closeAfter) {
-          const cleanup = () => {
-            try {
-              printWindow.close();
-            } catch (e) {}
-          };
-          setTimeout(cleanup, closeAfter);
-        }
+        // const closeAfter = 900; // ms; set to null to keep window open
+        // if (closeAfter) {
+        //   const cleanup = () => {
+        //     try {
+        //       printWindow.close();
+        //     } catch (e) {}
+        //   };
+        //   setTimeout(cleanup, closeAfter);
+        // }
       }
     });
   };
