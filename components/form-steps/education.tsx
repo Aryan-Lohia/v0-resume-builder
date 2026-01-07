@@ -106,30 +106,6 @@ export default function EducationStep({ data, setData, errors }: any) {
       <Card className="p-6 bg-gray-50">
         <h3 className="font-semibold text-lg mb-4">Class 12 Education</h3>
 
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">School Icon (Optional)</label>
-          <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
-            {data.education.class12Icon ? (
-              <div className="space-y-3">
-                <img
-                  src={data.education.class12Icon}
-                  alt="Class 12 icon"
-                  className="w-16 h-16 rounded-lg mx-auto object-contain"
-                />
-                <label className="inline-block px-3 py-1.5 text-sm text-white rounded-lg cursor-pointer" style={{ backgroundColor: '#ec3a5d' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#d12e4f'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#ec3a5d'}>
-                  Change Icon
-                  <input type="file" accept="image/*" onChange={(e) => handleIconUpload("class12Icon", e)} className="hidden" />
-                </label>
-              </div>
-            ) : (
-              <label className="inline-block px-3 py-1.5 text-sm text-white rounded-lg cursor-pointer" style={{ backgroundColor: '#ec3a5d' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#d12e4f'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#ec3a5d'}>
-                Upload Icon
-                <input type="file" accept="image/*" onChange={(e) => handleIconUpload("class12Icon", e)} className="hidden" />
-              </label>
-            )}
-          </div>
-        </div>
-
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">School Name *</label>
@@ -171,31 +147,6 @@ export default function EducationStep({ data, setData, errors }: any) {
 
       <Card className="p-6 bg-gray-50">
         <h3 className="font-semibold text-lg mb-4">Class 10 Education</h3>
-
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">School Icon (Optional)</label>
-          <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
-            {data.education.class10Icon ? (
-              <div className="space-y-3">
-                <img
-                  src={data.education.class10Icon}
-                  alt="Class 10 icon"
-                  className="w-16 h-16 rounded-lg mx-auto object-contain"
-                />
-                <label className="inline-block px-3 py-1.5 text-sm text-white rounded-lg cursor-pointer" style={{ backgroundColor: '#ec3a5d' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#d12e4f'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#ec3a5d'}>
-                  Change Icon
-                  <input type="file" accept="image/*" onChange={(e) => handleIconUpload("class10Icon", e)} className="hidden" />
-                </label>
-              </div>
-            ) : (
-              <label className="inline-block px-3 py-1.5 text-sm text-white rounded-lg cursor-pointer" style={{ backgroundColor: '#ec3a5d' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#d12e4f'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#ec3a5d'}>
-                Upload Icon
-                <input type="file" accept="image/*" onChange={(e) => handleIconUpload("class10Icon", e)} className="hidden" />
-              </label>
-            )}
-          </div>
-        </div>
-
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">School Name *</label>

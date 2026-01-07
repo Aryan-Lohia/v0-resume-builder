@@ -373,7 +373,6 @@ const generateHTML = () => {
             </div>
             <div class="divider"></div>
             <div class="edu-item">
-              ${edu.class12Icon ? `<img src="${edu.class12Icon}" alt="Class 12 icon" class="edu-icon" />` : ""}
               <div class="edu-content">
                 <div class="edu-school">${edu.class12School}</div>
                 <div class="edu-detail">Class 12 — ${edu.class12Board} (${edu.class12Marks})</div>
@@ -381,7 +380,6 @@ const generateHTML = () => {
             </div>
             <div class="divider"></div>
             <div class="edu-item">
-              ${edu.class10Icon ? `<img src="${edu.class10Icon}" alt="Class 10 icon" class="edu-icon" />` : ""}
               <div class="edu-content">
                 <div class="edu-school">${edu.class10School}</div>
                 <div class="edu-detail">Class 10 — ${edu.class10Board} (${edu.class10Marks})</div>

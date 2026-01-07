@@ -67,11 +67,9 @@ export default function ResumeForm({
       class12School: "",
       class12Board: "",
       class12Marks: "",
-      class12Icon: "",
       class10School: "",
       class10Board: "",
       class10Marks: "",
-      class10Icon: "",
     },
     coActivities: [
       {
