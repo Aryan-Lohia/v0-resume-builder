@@ -43,7 +43,7 @@ export default function SkillsStep({ data, setData }: any) {
                 onChange={(e) => setSkillInput(e.target.value)}
                 onKeyPress={(e) => e.key === "Enter" && handleAddSkill()}
               />
-              <Button onClick={handleAddSkill} className="bg-blue-600 hover:bg-blue-700">
+              <Button onClick={handleAddSkill} style={{ backgroundColor: '#ec3a5d' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#d12e4f'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#ec3a5d'}>
                 Add
               </Button>
             </div>

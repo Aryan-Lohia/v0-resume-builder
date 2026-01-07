@@ -1,5 +1,6 @@
 "use client"
 
+import type React from "react"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
@@ -19,6 +20,19 @@ export default function WorkExperienceStep({ data, setData, errors }: any) {
     setData((prev: any) => ({ ...prev, workExperience: updated }))
   }
 
+  const handleIconUpload = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      const reader = new FileReader()
+      reader.onload = (event) => {
+        const updated = [...data.workExperience]
+        updated[index] = { ...updated[index], icon: event.target?.result }
+        setData((prev: any) => ({ ...prev, workExperience: updated }))
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
   const addExperience = () => {
     setData((prev: any) => ({
       ...prev,
@@ -32,6 +46,7 @@ export default function WorkExperienceStep({ data, setData, errors }: any) {
           endDate: "",
           description: "",
           highlights: ["", "", ""],
+          icon: "",
         },
       ],
     }))
@@ -59,6 +74,30 @@ export default function WorkExperienceStep({ data, setData, errors }: any) {
             >
               <Trash2 className="w-4 h-4" />
             </Button>
+          </div>
+
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-2">Company Icon (Optional)</label>
+            <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+              {exp.icon ? (
+                <div className="space-y-3">
+                  <img
+                    src={exp.icon}
+                    alt="Company icon"
+                    className="w-16 h-16 rounded-lg mx-auto object-contain"
+                  />
+                  <label className="inline-block px-3 py-1.5 text-sm text-white rounded-lg cursor-pointer" style={{ backgroundColor: '#ec3a5d' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#d12e4f'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#ec3a5d'}>
+                    Change Icon
+                    <input type="file" accept="image/*" onChange={(e) => handleIconUpload(idx, e)} className="hidden" />
+                  </label>
+                </div>
+              ) : (
+                <label className="inline-block px-3 py-1.5 text-sm text-white rounded-lg cursor-pointer" style={{ backgroundColor: '#ec3a5d' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#d12e4f'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#ec3a5d'}>
+                  Upload Icon
+                  <input type="file" accept="image/*" onChange={(e) => handleIconUpload(idx, e)} className="hidden" />
+                </label>
+              )}
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">

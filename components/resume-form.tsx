@@ -37,6 +37,7 @@ export default function ResumeForm({
         endDate: "",
         description: "",
         highlights: ["", "", ""],
+        icon: "",
       },
     ],
     projects: [
@@ -62,9 +63,15 @@ export default function ResumeForm({
       degree: "",
       startYear: "",
       endYear: "",
-      highSchool: "",
+      universityIcon: "",
+      class12School: "",
+      class12Board: "",
       class12Marks: "",
+      class12Icon: "",
+      class10School: "",
+      class10Board: "",
       class10Marks: "",
+      class10Icon: "",
     },
     coActivities: [
       {
@@ -151,8 +158,11 @@ export default function ResumeForm({
       if (!edu.degree.trim()) newErrors.degree = "Degree is required"
       if (!edu.startYear.trim()) newErrors.startYear = "Start year is required"
       if (!edu.endYear.trim()) newErrors.endYear = "End year is required"
-      if (!edu.highSchool.trim()) newErrors.highSchool = "High school is required"
+      if (!edu.class12School.trim()) newErrors.class12School = "Class 12 school is required"
+      if (!edu.class12Board.trim()) newErrors.class12Board = "Class 12 board is required"
       if (!edu.class12Marks.trim()) newErrors.class12Marks = "Class 12 marks are required"
+      if (!edu.class10School.trim()) newErrors.class10School = "Class 10 school is required"
+      if (!edu.class10Board.trim()) newErrors.class10Board = "Class 10 board is required"
       if (!edu.class10Marks.trim()) newErrors.class10Marks = "Class 10 marks are required"
     } else if (step === 5) {
       formData.coActivities.forEach((act, idx) => {
@@ -200,11 +210,12 @@ export default function ResumeForm({
                 <div
                   className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold text-sm mb-2 ${
                     index === currentStep
-                      ? "bg-blue-500 text-white"
+                      ? "text-white"
                       : index < currentStep
                         ? "bg-green-500 text-white"
                         : "bg-gray-300 text-gray-700"
                   }`}
+                  style={index === currentStep ? { backgroundColor: '#ec3a5d' } : {}}
                 >
                   {index < currentStep ? "✓" : index + 1}
                 </div>
@@ -225,7 +236,7 @@ export default function ResumeForm({
           </Button>
 
           {currentStep < steps.length - 1 ? (
-            <Button onClick={handleNext} className="px-6 bg-blue-500 hover:bg-blue-600">
+            <Button onClick={handleNext} className="px-6" style={{ backgroundColor: '#ec3a5d' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#d12e4f'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#ec3a5d'}>
               Next
             </Button>
           ) : (

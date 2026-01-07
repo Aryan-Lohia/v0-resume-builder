@@ -10,7 +10,7 @@ const generateHTML = () => {
   const svgFallback =
     'data:image/svg+xml;utf8,' +
     encodeURIComponent(
-      `<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300"><rect width="100%" height="100%" fill="#e6eefc"/><text x="50%" y="52%" font-size="34" font-family="Times New Roman" fill="#0b1724" dominant-baseline="middle" text-anchor="middle">Photo</text></svg>`,
+      `<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300"><rect width="100%" height="100%" fill="#fce8ed"/><text x="50%" y="52%" font-size="34" font-family="Poppins" fill="#0b1724" dominant-baseline="middle" text-anchor="middle">Photo</text></svg>`,
     )
 
   const photoSrc = personalInfo.photo ? personalInfo.photo : svgFallback
@@ -26,7 +26,7 @@ const generateHTML = () => {
     html,body{
       height:100%;
       background:#f7f8fb;
-      font-family:"Times New Roman", Times, serif;
+      font-family:"Poppins", sans-serif;
       color:#111827;
     }
     a{color:inherit}
@@ -54,43 +54,49 @@ const generateHTML = () => {
     .header {
       display:flex;
       gap:20px;
-      padding:22px 28px;
-      align-items:flex-start;
+      padding:40px 28px 28px 28px;
+      align-items:flex-center ;
+      justify-content:space-between;
       background:linear-gradient(90deg, #ffffff 0%, #fbfdff 100%);
-      border-bottom:1px solid #eef2f6;
+      border-bottom:4px solid #eef2f6;
       position:relative;
     }
-    .header-left { flex:1; min-width:0; }
+    .header-left { 
+      display:flex;
+      flex-direction:column;
+      align-items:flex-start;
+      justify-content:center;
+    }
     .name {
       font-size:26px;
       font-weight:700;
       color:#0b1724;
       letter-spacing:0.4px;
-      margin-bottom:4px;
-      font-family:"Times New Roman", Times, serif;
+      margin-bottom:2px;
+      font-family:"Poppins", sans-serif;
     }
     .role {
       color:#6b7280;
       font-size:13px;
-      margin-bottom:10px;
+      margin-bottom:4px;
     }
     .contact {
       font-size:12px;
       color:#475569;
       line-height:1.6;
     }
-    .contact a { color:#0b6cf0; text-decoration:none; }
+    .contact a { color:#ec3a5d; text-decoration:none; }
 
     .photo-wrap { flex-shrink:0; }
     .photo-img {
       width:110px;
       height:110px;
       border-radius:10px;
-      background:#e6eefc;
-      border:2px solid #dbeafe;
+      background:#fce8ed;
+      border:2px solid #f8d4dc;
       object-fit:cover;
       display:block;
-      box-shadow:0 6px 18px rgba(11,108,240,0.06);
+      box-shadow:0 6px 18px rgba(236,58,93,0.06);
     }
 
     .body {
@@ -114,9 +120,9 @@ const generateHTML = () => {
     }
 
     h2 {
-      font-size:12px;
-      font-weight:800;
-      color:#0b6cf0;
+      font-size:13px;
+      font-weight:900;
+      color:#ec3a5d;
       text-transform:uppercase;
       letter-spacing:1px;
       margin-bottom:10px;
@@ -131,8 +137,9 @@ const generateHTML = () => {
     .section:not(:last-child)::after {
       content:"";
       display:block;
-      height:1px;
-      background:linear-gradient(90deg, transparent, rgba(14,20,30,0.06), transparent);
+      height:4px;
+      background:linear-gradient(90deg, rgba(14,20,30,0) 0%, rgba(14,20,30,0.10) 15%, rgba(14,20,30,0.22) 50%, rgba(14,20,30,0.10) 85%, rgba(14,20,30,0) 100%);
+      border-radius:2px;
       margin-top:14px;
     }
 
@@ -149,12 +156,52 @@ const generateHTML = () => {
       display:flex;
       justify-content:space-between;
       gap:12px;
+      font-weight:600;
       align-items:flex-start;
       margin-bottom:6px;
     }
+      .item-company {
+        font-size:11px;
+        color:#6b7280;
+        white-space:nowrap;
+        display:block;
+      }
+    .item-title-company {
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+      align-items:flex-start;
+    }
+    .item-title-company .item-title {
+      font-size:15px;
+      
+      font-weight:800;
+      color:#0b1724;
+    }
+    .item-title-company .item-company {
+      font-size:11px;
+      color:#6b7280;
+      white-space:nowrap;
+    }
+
+    .item-header-with-icon {
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      flex:1;
+      min-width:0;
+    }
+    .item-icon {
+      width:30px;
+      height:30px;
+      flex-shrink:0;
+      object-fit:contain;
+      border-radius:4px;
+      margin-top:2px;
+    }
     .item-title {
       font-size:15px;
-      font-weight:600;
+      font-weight:800;
       color:#0b1724;
     }
     .item-meta {
@@ -171,6 +218,26 @@ const generateHTML = () => {
     li { margin-bottom:6px; }
 
     .edu-block { margin-bottom:10px; }
+    .edu-item {
+      display:flex;
+      gap:10px;
+      flex-direction:column;
+      align-items:flex-start;
+      margin-bottom:10px;
+    }
+    .edu-item:last-child { margin-bottom:0; }
+    .edu-icon {
+      width:50px;
+      height:50px;
+      flex-shrink:0;
+      object-fit:contain;
+      border-radius:4px;
+      margin-top:2px;
+    }
+    .edu-content {
+      flex:1;
+      min-width:0;
+    }
     .edu-school { font-weight:700; color:#0b1724; font-size:13px; margin-bottom:4px; }
     .edu-detail { font-size:12px; color:#6b7280; }
 
@@ -179,8 +246,9 @@ const generateHTML = () => {
     .co .desc { font-size:12px; color:#6b7280; }
 
     .divider {
-      height:1px;
-      background:linear-gradient(90deg, transparent, rgba(14,20,30,0.03), transparent);
+      height:2px;
+      background:linear-gradient(90deg, rgba(14,20,30,0) 0%, rgba(14,20,30,0.08) 15%, rgba(14,20,30,0.18) 50%, rgba(14,20,30,0.08) 85%, rgba(14,20,30,0) 100%);
+      border-radius:2px;
       margin:12px 0;
     }
 
@@ -216,7 +284,7 @@ const generateHTML = () => {
         <div class="name">${personalInfo.fullName.toUpperCase()}</div>
         <div class="role">${personalInfo.education}</div>
         <div class="contact">
-          <a href="mailto:${personalInfo.email}">${personalInfo.email}</a> | <a href="${personalInfo.linkedinUrl}" target="_blank">Linkedin Profile</a><br>
+          <a href="mailto:${personalInfo.email}">${personalInfo.email}</a> | <a href="${personalInfo.linkedinUrl}" target="_blank">${personalInfo.linkedinUrl}</a><br>
           ${personalInfo.phone}
         </div>
       </div>
@@ -235,7 +303,13 @@ const generateHTML = () => {
               (exp) => `
             <div class="item">
               <div class="item-header">
-                <div class="item-title">${exp.role} — ${exp.company}</div>
+                <div class="item-header-with-icon"> 
+                  ${exp.icon ? `<img src="${exp.icon}" alt="${exp.company} icon" class="item-icon" />` : ""}
+                  <div class="item-title-company">
+                  <div class="item-title">${exp.role}</div>
+                  <div class="item-company">${exp.company}</div>  
+                  </div>
+                </div>
                 <div class="item-meta">${exp.startDate} — ${exp.endDate}</div>
               </div>
               ${exp.title ? `<div class="item-sub">${exp.title}</div>` : ""}
@@ -290,11 +364,29 @@ const generateHTML = () => {
         <section class="section">
           <h2>Education</h2>
           <div class="edu-block">
-            <div class="edu-school">${edu.university}</div>
-            <div class="edu-detail">${edu.degree} — ${edu.startYear} — ${edu.endYear}</div>
+            <div class="edu-item">
+              ${edu.universityIcon ? `<img src="${edu.universityIcon}" alt="University icon" class="edu-icon" />` : ""}
+              <div class="edu-content">
+                <div class="edu-school">${edu.university}</div>
+                <div class="edu-detail">${edu.degree} — ${edu.startYear} — ${edu.endYear}</div>
+              </div>
+            </div>
             <div class="divider"></div>
-            <div class="edu-school">${edu.highSchool}</div>
-            <div class="edu-detail">Class 12 (${edu.class12Marks}) — Class 10 (${edu.class10Marks})</div>
+            <div class="edu-item">
+              ${edu.class12Icon ? `<img src="${edu.class12Icon}" alt="Class 12 icon" class="edu-icon" />` : ""}
+              <div class="edu-content">
+                <div class="edu-school">${edu.class12School}</div>
+                <div class="edu-detail">Class 12 — ${edu.class12Board} (${edu.class12Marks})</div>
+              </div>
+            </div>
+            <div class="divider"></div>
+            <div class="edu-item">
+              ${edu.class10Icon ? `<img src="${edu.class10Icon}" alt="Class 10 icon" class="edu-icon" />` : ""}
+              <div class="edu-content">
+                <div class="edu-school">${edu.class10School}</div>
+                <div class="edu-detail">Class 10 — ${edu.class10Board} (${edu.class10Marks})</div>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -353,7 +445,7 @@ const downloadResume = () => {
         print-color-adjust: exact;
         background: white;
         box-sizing: border-box;
-        font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+        font-family: "Poppins", sans-serif;
       }
 
       /* Ensure content doesn't split across pages */
@@ -460,7 +552,7 @@ const downloadResume = () => {
             <Button onClick={onEdit} variant="outline" className="px-6 bg-transparent">
               Edit Resume
             </Button>
-            <Button onClick={downloadResume} className="bg-blue-600 hover:bg-blue-700 px-6">
+            <Button onClick={downloadResume} className="px-6" style={{ backgroundColor: '#ec3a5d' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#d12e4f'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#ec3a5d'}>
               Download / Print
             </Button>
           </div>

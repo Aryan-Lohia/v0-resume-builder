@@ -75,7 +75,7 @@ export default function PersonalInfoStep({ data, setData, errors }: any) {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Current Education *</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">Profile Headline *</label>
         <Input
           type="text"
           placeholder="e.g., UG in Business Management — NEXIS School of Business"
@@ -87,7 +87,7 @@ export default function PersonalInfoStep({ data, setData, errors }: any) {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Upload Candidate Photo *</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">Upload Your Professional Photo *</label>
         <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
           {data.personalInfo.photo ? (
             <div className="space-y-4">
@@ -96,13 +96,13 @@ export default function PersonalInfoStep({ data, setData, errors }: any) {
                 alt="Profile"
                 className="w-32 h-32 rounded-lg mx-auto object-cover"
               />
-              <label className="inline-block px-4 py-2 bg-blue-500 text-white rounded-lg cursor-pointer hover:bg-blue-600">
+              <label className="inline-block px-4 py-2 text-white rounded-lg cursor-pointer" style={{ backgroundColor: '#ec3a5d' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#d12e4f'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#ec3a5d'}>
                 Change Photo
                 <input type="file" accept="image/*" onChange={handlePhotoUpload} className="hidden" />
               </label>
             </div>
           ) : (
-            <label className="inline-block px-4 py-2 bg-blue-500 text-white rounded-lg cursor-pointer hover:bg-blue-600">
+            <label className="inline-block px-4 py-2 text-white rounded-lg cursor-pointer" style={{ backgroundColor: '#ec3a5d' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#d12e4f'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#ec3a5d'}>
               Upload Photo
               <input type="file" accept="image/*" onChange={handlePhotoUpload} className="hidden" />
             </label>
