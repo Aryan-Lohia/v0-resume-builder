@@ -1,7 +1,6 @@
 "use client"
 
 import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Trash2 } from "lucide-react"
@@ -10,6 +9,15 @@ export default function LeadershipStep({ data, setData, errors }: any) {
   const updateLeadership = (index: number, field: string, value: any) => {
     const updated = [...data.leadership]
     updated[index] = { ...updated[index], [field]: value }
+    setData((prev: any) => ({ ...prev, leadership: updated }))
+  }
+
+  const updateBullet = (index: number, bulletIndex: number, value: string) => {
+    const updated = [...data.leadership]
+    if (!updated[index].bullets) {
+      updated[index].bullets = ["", "", ""]
+    }
+    updated[index].bullets[bulletIndex] = value
     setData((prev: any) => ({ ...prev, leadership: updated }))
   }
 
@@ -23,7 +31,7 @@ export default function LeadershipStep({ data, setData, errors }: any) {
           position: "",
           organization: "",
           duration: "",
-          description: "",
+          bullets: ["", "", ""],
         },
       ],
     }))
@@ -93,17 +101,22 @@ export default function LeadershipStep({ data, setData, errors }: any) {
             </div>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Initiatives / Impact Description *</label>
-            <Textarea
-              placeholder="e.g., Led sustainability campaigns including waste segregation drives and plantation programs, reached 400+ students"
-              value={lead.description}
-              onChange={(e) => updateLeadership(idx, "description", e.target.value)}
-              className={`min-h-24 ${errors[`description-${idx}`] ? "border-red-500" : ""}`}
-            />
-            {errors[`description-${idx}`] && (
-              <p className="text-red-500 text-sm mt-1">{errors[`description-${idx}`]}</p>
-            )}
+          <div className="space-y-3">
+            <label className="block text-sm font-medium text-gray-700">Key Initiatives / Impact Bullets (3 required) *</label>
+            {(lead.bullets || ["", "", ""]).map((bullet: string, bidx: number) => (
+              <div key={bidx}>
+                <Input
+                  type="text"
+                  placeholder={`Bullet ${bidx + 1}: e.g., Led sustainability campaigns including waste segregation drives...`}
+                  value={bullet}
+                  onChange={(e) => updateBullet(idx, bidx, e.target.value)}
+                  className={errors[`bullet-${idx}-${bidx}`] ? "border-red-500" : ""}
+                />
+                {errors[`bullet-${idx}-${bidx}`] && (
+                  <p className="text-red-500 text-sm mt-1">{errors[`bullet-${idx}-${bidx}`]}</p>
+                )}
+              </div>
+            ))}
           </div>
         </Card>
       ))}
