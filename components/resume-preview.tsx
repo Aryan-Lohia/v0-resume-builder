@@ -371,7 +371,9 @@ export default function ResumePreview({
                 <div class="item-title">${l.position} — ${l.organization}</div>
                 <div class="item-meta">${l.duration}</div>
               </div>
-              <div class="item-sub">${l.description}</div>
+              <ul>
+                ${(l.bullets || []).map((bullet) => `<li>${bullet}</li>`).join("")}
+              </ul>
             </div>
           `
             )

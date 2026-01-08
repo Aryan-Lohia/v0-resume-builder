@@ -55,7 +55,7 @@ export default function ResumeForm({
         position: "",
         organization: "",
         duration: "",
-        description: "",
+        bullets: ["", "", ""],
       },
     ],
     education: {
@@ -154,16 +154,14 @@ export default function ResumeForm({
         });
       });
     } else if (step === 3) {
-      formData.leadership.forEach((lead, idx) => {
-        if (!lead.position.trim())
-          newErrors[`position-${idx}`] = "Position is required";
-        if (!lead.organization.trim())
-          newErrors[`organization-${idx}`] = "Organization is required";
-        if (!lead.duration.trim())
-          newErrors[`duration-${idx}`] = "Duration is required";
-        if (!lead.description.trim())
-          newErrors[`description-${idx}`] = "Description is required";
-      });
+      formData.leadership.forEach((lead: any, idx: number) => {
+        if (!lead.position.trim()) newErrors[`position-${idx}`] = "Position is required"
+        if (!lead.organization.trim()) newErrors[`organization-${idx}`] = "Organization is required"
+        if (!lead.duration.trim()) newErrors[`duration-${idx}`] = "Duration is required"
+        ;(lead.bullets || ["", "", ""]).forEach((bullet: string, bidx: number) => {
+          if (!bullet.trim()) newErrors[`bullet-${idx}-${bidx}`] = "Bullet point is required"
+        })
+      })
     } else if (step === 4) {
       const edu = formData.education;
       if (!edu.university.trim())
