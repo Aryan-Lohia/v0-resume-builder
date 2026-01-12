@@ -275,12 +275,12 @@ export default function ResumePreview({
     }
 
     @media print {
-      html,body { background: white; margin:0; padding:0; height:297mm; }
-      .paper { box-shadow:none; border-radius:0; margin:0; width:210mm; height:297mm; overflow:visible; }
+      html,body { background: white; margin:0; padding:0; height:297mm; width: 210mm; }
+      .paper { box-shadow:none; border-radius:0; margin:0; width:100%; height:auto; overflow:visible; }
       .header { padding:18px 22px; }
       .body { padding:16px 22px; gap:18px; }
       .photo-img { display:block; }
-      .paper.fit-scale { transform-origin: top left; transform: scale(0.98); }
+      .paper.fit-scale { transform: none !important; }
     }
   </style>
 </head>
@@ -463,7 +463,7 @@ export default function ResumePreview({
     // A robust print-ready wrapper: inject print-specific CSS to force A4 and prevent page breaks
     const printCss = `
     <style>
-      @page { size: A4; margin: 10mm; }
+      @page { size: A4; margin: 0mm; }
       html, body {
         width: 210mm; /* A4 width */
         height: 297mm; /* A4 height */
